@@ -27,16 +27,16 @@ export const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] pb-20 lg:pb-0">
+    <div className="min-h-screen bg-[#E6E4E4] pb-20 lg:pb-0">
       <div className="lg:flex lg:min-h-screen">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:block lg:w-64 lg:bg-[#1E1E1E] lg:border-r lg:border-gray-800">
+        <div className="hidden lg:block lg:w-64 lg:bg-[#E1CDEE] lg:border-r lg:border-[#5F5D61]">
           <div className="p-6">
             <div className="flex items-center space-x-3 mb-8">
-              <div className="w-10 h-10 bg-[#0ABFBC] rounded-lg flex items-center justify-center text-[#121212] font-bold">
+              <div className="w-10 h-10 bg-[#CF8DFD] rounded-lg flex items-center justify-center text-white font-bold">
                 SM
               </div>
-              <h1 className="text-xl font-semibold text-white">SignMate</h1>
+              <h1 className="text-xl font-semibold text-black">SignMate</h1>
             </div>
             <Navigation 
               activeTab={activeTab} 

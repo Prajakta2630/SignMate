@@ -18,7 +18,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab,
 
   if (variant === 'mobile') {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-[#1E1E1E] border-t border-gray-800 z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#E1CDEE] border-t border-[#5F5D61] z-50">
         <div className="flex">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -29,7 +29,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab,
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`flex-1 py-3 px-2 flex flex-col items-center space-y-1 transition-colors duration-200 ${
-                  isActive ? 'text-[#0ABFBC]' : 'text-[#E0E0E0] hover:text-white'
+                  isActive ? 'text-[#CF8DFD]' : 'text-[#5F5D61] hover:text-black'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -54,8 +54,8 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab,
             onClick={() => setActiveTab(item.id)}
             className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
               isActive 
-                ? 'bg-[#0ABFBC] text-[#121212] font-semibold' 
-                : 'text-[#E0E0E0] hover:bg-gray-800 hover:text-white'
+                ? 'bg-[#CF8DFD] text-white font-semibold' 
+                : 'text-[#5F5D61] hover:bg-[#5F5D61]/20 hover:text-black'
             }`}
           >
             <Icon className="w-5 h-5" />

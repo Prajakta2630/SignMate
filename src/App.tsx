@@ -10,7 +10,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-[#E6E4E4] text-black">
       {showOnboarding ? (
         <Onboarding onComplete={handleOnboardingComplete} />
       ) : (
