@@ -12,7 +12,7 @@ export const MainApp: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <Dashboard />;
+        return <Dashboard setActiveTab={setActiveTab} />;
       case 'lessons':
         return <Lessons />;
       case 'dictionary':
