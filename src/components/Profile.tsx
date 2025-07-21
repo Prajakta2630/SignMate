@@ -33,7 +33,7 @@ export const Profile: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-gradient-to-br from-[#0ABFBC] to-[#FFDA00] rounded-full flex items-center justify-center text-2xl font-bold text-[#121212]">
-              AS
+              PG
             </div>
             <div>
               <h1 className="text-3xl font-semibold text-white">Prajakta Gadhave</h1>
