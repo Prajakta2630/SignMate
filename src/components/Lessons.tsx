@@ -41,10 +41,10 @@ export const Lessons: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'text-[#CF8DFD] bg-[#CF8DFD]/20';
-      case 'Intermediate': return 'text-[#CF8DFD] bg-[#CF8DFD]/20';
-      case 'Advanced': return 'text-[#CF8DFD] bg-[#CF8DFD]/20';
-      default: return 'text-[#5F5D61] bg-[#5F5D61]/20';
+      case 'Beginner': return 'text-[#10B981] bg-[#10B981]/20';
+      case 'Intermediate': return 'text-[#FFDA00] bg-[#FFDA00]/20';
+      case 'Advanced': return 'text-[#EF4444] bg-[#EF4444]/20';
+      default: return 'text-[#E0E0E0] bg-gray-700';
     }
   };
 
@@ -52,8 +52,8 @@ export const Lessons: React.FC = () => {
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-black mb-2">SignMate Lessons</h1>
-        <p className="text-[#5F5D61]">Master ISL with structured video lessons</p>
+        <h1 className="text-3xl font-semibold text-white mb-2">SignMate Lessons</h1>
+        <p className="text-[#E0E0E0]">Master ISL with structured video lessons</p>
       </div>
 
       {/* Categories */}
@@ -65,8 +65,8 @@ export const Lessons: React.FC = () => {
               onClick={() => setSelectedCategory(category.id)}
               className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                 selectedCategory === category.id
-                  ? 'bg-[#CF8DFD] text-white'
-                  : 'bg-[#E1CDEE] text-[#5F5D61] hover:bg-[#CF8DFD]/20 hover:text-black'
+                  ? 'bg-[#0ABFBC] text-[#121212]'
+                  : 'bg-[#1E1E1E] text-[#E0E0E0] hover:bg-gray-700 hover:text-white'
               }`}
             >
               {category.name} ({category.count})
@@ -80,18 +80,18 @@ export const Lessons: React.FC = () => {
         {lessons[selectedCategory as keyof typeof lessons]?.map((lesson) => (
           <div
             key={lesson.id}
-            className={`bg-[#E1CDEE] rounded-xl border border-[#5F5D61] overflow-hidden hover:border-[#CF8DFD] transition-all duration-200 ${
+            className={`bg-[#1E1E1E] rounded-xl border border-gray-800 overflow-hidden hover:border-gray-700 transition-all duration-200 ${
               !lesson.locked ? 'hover:scale-105 cursor-pointer' : 'opacity-60'
             }`}
           >
             {/* Video Thumbnail */}
-            <div className="relative h-48 bg-gradient-to-br from-[#CF8DFD]/20 to-[#E1CDEE]/40 flex items-center justify-center">
+            <div className="relative h-48 bg-gradient-to-br from-[#0ABFBC]/20 to-[#FFDA00]/20 flex items-center justify-center">
               {lesson.locked ? (
-                <Lock className="w-12 h-12 text-[#5F5D61]" />
+                <Lock className="w-12 h-12 text-[#E0E0E0]" />
               ) : lesson.completed ? (
-                <CheckCircle className="w-12 h-12 text-[#CF8DFD]" />
+                <CheckCircle className="w-12 h-12 text-[#10B981]" />
               ) : (
-                <Play className="w-12 h-12 text-[#CF8DFD]" />
+                <Play className="w-12 h-12 text-[#0ABFBC]" />
               )}
               
               {/* Duration Badge */}
@@ -102,7 +102,7 @@ export const Lessons: React.FC = () => {
               
               {/* Completion Badge */}
               {lesson.completed && (
-                <div className="absolute top-3 left-3 bg-[#CF8DFD] text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
+                <div className="absolute top-3 left-3 bg-[#10B981] text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
                   <CheckCircle className="w-3 h-3" />
                   <span>Completed</span>
                 </div>
@@ -116,13 +116,13 @@ export const Lessons: React.FC = () => {
                   {lesson.difficulty}
                 </span>
                 {!lesson.locked && (
-                  <ChevronRight className="w-5 h-5 text-[#5F5D61]" />
+                  <ChevronRight className="w-5 h-5 text-[#E0E0E0]" />
                 )}
               </div>
               
-              <h3 className="text-black font-semibold mb-2">{lesson.title}</h3>
+              <h3 className="text-white font-semibold mb-2">{lesson.title}</h3>
               
-              <p className="text-[#5F5D61] text-sm mb-4">
+              <p className="text-[#E0E0E0] text-sm mb-4">
                 {lesson.locked 
                   ? 'Complete previous lessons to unlock' 
                   : lesson.completed 
@@ -135,10 +135,10 @@ export const Lessons: React.FC = () => {
                 disabled={lesson.locked}
                 className={`w-full py-2 rounded-lg font-medium transition-colors duration-200 ${
                   lesson.locked
-                    ? 'bg-[#5F5D61] text-white cursor-not-allowed'
+                    ? 'bg-gray-700 text-[#E0E0E0] cursor-not-allowed'
                     : lesson.completed
-                      ? 'bg-[#5F5D61] text-white hover:bg-[#5F5D61]/80'
-                      : 'bg-[#CF8DFD] text-white hover:bg-[#CF8DFD]/90'
+                      ? 'bg-gray-700 text-white hover:bg-gray-600'
+                      : 'bg-[#0ABFBC] text-[#121212] hover:bg-[#0ABFBC]/90'
                 }`}
               >
                 {lesson.locked ? 'Locked' : lesson.completed ? 'Review' : 'Start Lesson'}
@@ -149,18 +149,18 @@ export const Lessons: React.FC = () => {
       </div>
 
       {/* Continue Learning Section */}
-      <div className="mt-12 bg-gradient-to-r from-[#CF8DFD]/20 to-[#E1CDEE]/40 rounded-xl p-6 border border-[#5F5D61]">
+      <div className="mt-12 bg-gradient-to-r from-[#0ABFBC]/20 to-[#FFDA00]/20 rounded-xl p-6 border border-gray-800">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-black mb-2">Continue Your SignMate Journey</h2>
-            <p className="text-[#5F5D61]">You're doing great! Keep practicing to master ISL.</p>
+            <h2 className="text-xl font-semibold text-white mb-2">Continue Your SignMate Journey</h2>
+            <p className="text-[#E0E0E0]">You're doing great! Keep practicing to master ISL.</p>
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-[#CF8DFD]">85%</p>
-              <p className="text-[#5F5D61] text-sm">Progress</p>
+              <p className="text-2xl font-bold text-[#0ABFBC]">85%</p>
+              <p className="text-[#E0E0E0] text-sm">Progress</p>
             </div>
-            <button className="bg-[#CF8DFD] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#CF8DFD]/90 transition-colors duration-200">
+            <button className="bg-[#0ABFBC] text-[#121212] px-6 py-3 rounded-lg font-semibold hover:bg-[#0ABFBC]/90 transition-colors duration-200">
               Continue Learning
             </button>
           </div>
