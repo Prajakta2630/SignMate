@@ -36,7 +36,7 @@ export const Profile: React.FC = () => {
               AS
             </div>
             <div>
-              <h1 className="text-3xl font-semibold text-white">Arjun Sharma</h1>
+              <h1 className="text-3xl font-semibold text-white">Prajakta Gadhave</h1>
               <p className="text-[#0ABFBC] font-medium">SignMate Learner since March 2024</p>
             </div>
           </div>
@@ -277,7 +277,7 @@ export const Profile: React.FC = () => {
                   <label className="block text-[#E0E0E0] font-medium mb-2">Email</label>
                   <input
                     type="email"
-                    value="arjun@example.com"
+                    value="prajakta@example.com"
                     className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-[#0ABFBC] focus:outline-none"
                   />
                 </div>
