@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 
 interface AuthProps {
-  onAuthComplete: () => void;
+  onAuthComplete: (userData: {name: string, email: string}) => void;
   onBack: () => void;
 }
 
@@ -92,7 +92,12 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
     setTimeout(() => {
       if (isLogin) {
         // Login logic
+        const userData = users[formData.email];
         console.log('Logging in user:', formData.email);
+        onAuthComplete({
+          name: userData.name,
+          email: formData.email
+        });
       } else {
         // Signup logic - store user data
         const newUsers = {
@@ -104,10 +109,13 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
         };
         setUsers(newUsers);
         console.log('User registered:', formData.name, formData.email);
+        onAuthComplete({
+          name: formData.name,
+          email: formData.email
+        });
       }
       
       setIsLoading(false);
-      onAuthComplete();
     }, 1500);
   };
 
@@ -131,7 +139,11 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
     // Simulate social login
     setTimeout(() => {
       setIsLoading(false);
-      onAuthComplete();
+      // For social login, we'll use a default name
+      onAuthComplete({
+        name: `${provider} User`,
+        email: `user@${provider.toLowerCase()}.com`
+      });
     }, 1000);
   };
   return (

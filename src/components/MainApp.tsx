@@ -6,7 +6,11 @@ import { Dictionary } from './Dictionary';
 import { Upload } from './Upload';
 import { Profile } from './Profile';
 
-export const MainApp: React.FC = () => {
+interface MainAppProps {
+  user: {name: string, email: string} | null;
+}
+
+export const MainApp: React.FC<MainAppProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState('home');
 
   const renderContent = () => {
@@ -20,7 +24,7 @@ export const MainApp: React.FC = () => {
       case 'upload':
         return <Upload />;
       case 'profile':
-        return <Profile />;
+        return <Profile user={user} />;
       default:
         return <Dashboard />;
     }

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { User, Award, Calendar, TrendingUp, Settings, Bell, BookOpen, Users, Star, ChevronRight } from 'lucide-react';
 
-export const Profile: React.FC = () => {
+interface ProfileProps {
+  user: {name: string, email: string} | null;
+}
+
+export const Profile: React.FC<ProfileProps> = ({ user }) => {
   const [activeSection, setActiveSection] = useState('overview');
 
   const achievements = [
@@ -33,10 +37,10 @@ export const Profile: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-gradient-to-br from-[#0ABFBC] to-[#FFDA00] rounded-full flex items-center justify-center text-2xl font-bold text-[#121212]">
-              PG
+              {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'SM'}
             </div>
             <div>
-              <h1 className="text-3xl font-semibold text-white">Prajakta Gadhave</h1>
+              <h1 className="text-3xl font-semibold text-white">{user?.name || 'SignMate User'}</h1>
               <p className="text-[#0ABFBC] font-medium">SignMate Learner since March 2024</p>
             </div>
           </div>
@@ -269,7 +273,7 @@ export const Profile: React.FC = () => {
                   <label className="block text-[#E0E0E0] font-medium mb-2">Full Name</label>
                   <input
                     type="text"
-                    value="Prajakta Gadhave"
+                    value={user?.name || ''}
                     className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-[#0ABFBC] focus:outline-none"
                   />
                 </div>
@@ -277,7 +281,7 @@ export const Profile: React.FC = () => {
                   <label className="block text-[#E0E0E0] font-medium mb-2">Email</label>
                   <input
                     type="email"
-                    value="prajakta@example.com"
+                    value={user?.email || ''}
                     className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-[#0ABFBC] focus:outline-none"
                   />
                 </div>

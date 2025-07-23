@@ -6,13 +6,15 @@ import { MainApp } from './components/MainApp';
 function App() {
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
+  const [user, setUser] = useState<{name: string, email: string} | null>(null);
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
     setShowAuth(true);
   };
 
-  const handleAuthComplete = () => {
+  const handleAuthComplete = (userData: {name: string, email: string}) => {
+    setUser(userData);
     setShowAuth(false);
   };
 
@@ -27,7 +29,7 @@ function App() {
       ) : showAuth ? (
         <Auth onAuthComplete={handleAuthComplete} onBack={handleBackToOnboarding} />
       ) : (
-        <MainApp />
+        <MainApp user={user} />
       )}
     </div>
   );
