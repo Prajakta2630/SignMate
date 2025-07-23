@@ -9,6 +9,7 @@ interface AuthProps {
 export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,20 +17,95 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
     confirmPassword: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [users, setUsers] = useState<{[email: string]: {name: string, password: string}}>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
   };
 
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+
+    // Name validation (signup only)
+    if (!isLogin && !formData.name.trim()) {
+      newErrors.name = 'Full name is required';
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    // Confirm password validation (signup only)
+    if (!isLogin) {
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
+    }
+
+    // Login-specific validation
+    if (isLogin && formData.email && !users[formData.email]) {
+      newErrors.email = 'No account found with this email';
+    }
+
+    if (isLogin && formData.email && users[formData.email] && formData.password && users[formData.email].password !== formData.password) {
+      newErrors.password = 'Incorrect password';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate API call
+    // Simulate API call delay
     setTimeout(() => {
+      if (isLogin) {
+        // Login logic
+        console.log('Logging in user:', formData.email);
+      } else {
+        // Signup logic - store user data
+        const newUsers = {
+          ...users,
+          [formData.email]: {
+            name: formData.name,
+            password: formData.password
+          }
+        };
+        setUsers(newUsers);
+        console.log('User registered:', formData.name, formData.email);
+      }
+      
       setIsLoading(false);
       onAuthComplete();
     }, 1500);
@@ -43,14 +119,28 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
       password: '',
       confirmPassword: ''
     });
+    setErrors({});
+    setShowPassword(false);
+    setShowConfirmPassword(false);
   };
 
+  const handleSocialLogin = (provider: string) => {
+    setIsLoading(true);
+    console.log(`Logging in with ${provider}`);
+    
+    // Simulate social login
+    setTimeout(() => {
+      setIsLoading(false);
+      onAuthComplete();
+    }, 1000);
+  };
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-6">
         <button
           onClick={onBack}
+          disabled={isLoading}
           className="p-2 rounded-lg bg-[#1E1E1E] border border-gray-800 hover:border-gray-700 transition-colors duration-200"
         >
           <ArrowLeft className="w-5 h-5 text-[#E0E0E0]" />
@@ -96,10 +186,16 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your full name"
-                    className="w-full bg-[#1E1E1E] border border-gray-800 rounded-xl pl-12 pr-4 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200"
+                    className={`w-full bg-[#1E1E1E] border rounded-xl pl-12 pr-4 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200 ${
+                      errors.name ? 'border-[#EF4444]' : 'border-gray-800'
+                    }`}
                     required
+                    disabled={isLoading}
                   />
                 </div>
+                {errors.name && (
+                  <p className="text-[#EF4444] text-sm mt-1">{errors.name}</p>
+                )}
               </div>
             )}
 
@@ -116,10 +212,16 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter your email"
-                  className="w-full bg-[#1E1E1E] border border-gray-800 rounded-xl pl-12 pr-4 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200"
+                  className={`w-full bg-[#1E1E1E] border rounded-xl pl-12 pr-4 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200 ${
+                    errors.email ? 'border-[#EF4444]' : 'border-gray-800'
+                  }`}
                   required
+                  disabled={isLoading}
                 />
               </div>
+              {errors.email && (
+                <p className="text-[#EF4444] text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -135,17 +237,24 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Enter your password"
-                  className="w-full bg-[#1E1E1E] border border-gray-800 rounded-xl pl-12 pr-12 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200"
+                  className={`w-full bg-[#1E1E1E] border rounded-xl pl-12 pr-12 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200 ${
+                    errors.password ? 'border-[#EF4444]' : 'border-gray-800'
+                  }`}
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#E0E0E0] hover:text-white transition-colors duration-200"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-[#EF4444] text-sm mt-1">{errors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password Field (Signup only) */}
@@ -157,15 +266,29 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#E0E0E0]" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="Confirm your password"
-                    className="w-full bg-[#1E1E1E] border border-gray-800 rounded-xl pl-12 pr-4 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200"
+                    className={`w-full bg-[#1E1E1E] border rounded-xl pl-12 pr-12 py-4 text-white placeholder-[#E0E0E0] focus:border-[#0ABFBC] focus:ring-1 focus:ring-[#0ABFBC] focus:outline-none transition-all duration-200 ${
+                      errors.confirmPassword ? 'border-[#EF4444]' : 'border-gray-800'
+                    }`}
                     required
+                    disabled={isLoading}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#E0E0E0] hover:text-white transition-colors duration-200"
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-[#EF4444] text-sm mt-1">{errors.confirmPassword}</p>
+                )}
               </div>
             )}
 
@@ -175,6 +298,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                 <button
                   type="button"
                   className="text-[#0ABFBC] hover:text-[#0ABFBC]/80 font-medium transition-colors duration-200"
+                  disabled={isLoading}
                 >
                   Forgot Password?
                 </button>
@@ -207,7 +331,11 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <button className="flex items-center justify-center px-4 py-3 border border-gray-800 rounded-xl bg-[#1E1E1E] hover:border-gray-700 transition-colors duration-200">
+              <button 
+                onClick={() => handleSocialLogin('Google')}
+                disabled={isLoading}
+                className="flex items-center justify-center px-4 py-3 border border-gray-800 rounded-xl bg-[#1E1E1E] hover:border-gray-700 transition-colors duration-200 disabled:opacity-50"
+              >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -217,7 +345,11 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
                 <span className="text-white font-medium">Google</span>
               </button>
 
-              <button className="flex items-center justify-center px-4 py-3 border border-gray-800 rounded-xl bg-[#1E1E1E] hover:border-gray-700 transition-colors duration-200">
+              <button 
+                onClick={() => handleSocialLogin('Facebook')}
+                disabled={isLoading}
+                className="flex items-center justify-center px-4 py-3 border border-gray-800 rounded-xl bg-[#1E1E1E] hover:border-gray-700 transition-colors duration-200 disabled:opacity-50"
+              >
                 <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
@@ -232,6 +364,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthComplete, onBack }) => {
               {isLogin ? "Don't have a SignMate account?" : "Already have a SignMate account?"}
               <button
                 onClick={toggleAuthMode}
+                disabled={isLoading}
                 className="ml-2 text-[#0ABFBC] hover:text-[#0ABFBC]/80 font-semibold transition-colors duration-200"
               >
                 {isLogin ? 'Sign Up' : 'Sign In'}
