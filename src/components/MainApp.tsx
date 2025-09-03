@@ -16,7 +16,7 @@ export const MainApp: React.FC<MainAppProps> = ({ user }) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <Dashboard setActiveTab={setActiveTab} />;
+        return <Dashboard setActiveTab={setActiveTab} user={user} />;
       case 'lessons':
         return <Lessons />;
       case 'dictionary':
@@ -26,7 +26,7 @@ export const MainApp: React.FC<MainAppProps> = ({ user }) => {
       case 'profile':
         return <Profile user={user} />;
       default:
-        return <Dashboard />;
+        return <Dashboard setActiveTab={setActiveTab} user={user} />;
     }
   };
 
